@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:30:28 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/10 16:27:02 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/11 20:44:10 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,42 +23,67 @@ static t_env_lst	*neu_node(char **s)
 		return (NULL);
 	}
 	ft_memset(neu, 0, sizeof(neu));
-	neu->var = ft_strdup(s[0]);
-	if (!(neu->var))
-	{
-		free(neu);
-		perror("Malloc kaputt");
-		return (NULL);
-	}
-	if (s[1])
-	neu->val = ft_strdup(s[1]);
-	if (!(neu->val))
-	{
-		ft_clean_env(&neu);
-		perror("Malloc kaputt");
-		return (NULL);
-	}
+	neu->var = s[0];
+//	neu->var = ft_strdup(s[0]);
+//	if (!(neu->var))
+//	{
+//		free(neu);
+//		perror("Malloc kaputt");
+//		return (NULL);
+//	}
+//	if (s[1])
+//	neu->val = ft_strdup(s[1]);
+	neu->val = s[1];
+//	if (!(neu->val))
+//	{
+//		ft_clean_env(&neu);
+//		perror("Malloc kaputt");
+//		return (NULL);
+//	}
 	return (neu);
 }
 
-static void	ft_enlist(t_data *sh, char **s)
+static void	ft_enlist(t_data *sh, int i)
 {
 	t_env_lst	*current;
 	t_env_lst	*neu;
+	char		*eq;
+	char		*cut[2];
 
-	current = ft_get_env_var(sh, s[0]);
-	if (current)
+	eq = ft_strchr(sh->cmd[i], '=');
+	if (eq)
 	{
-		current->unset = 0;
-		current->not_exp = 0;
+		cut[0] = ft_substr(sh->cmd[i], 0, eq - sh->cmd[i]);
+		//error//perror//
+		cut[1] = ft_substr(eq + 1 , 0 , ft_strlen(eq + 1));
+		//error perror//
+		current = ft_get_env_var(sh, cut[0]);
+		if (current)
+		{
+			current->unset = 0;
+			current->not_exp = 0;
+			if (current->val)
+				free(current->val);
+			current->val = cut[1];
+			free(cut[0]);
+		}
+		else
+		{
+			neu = neu_node(cut);
+			current = sh->env;
+			while (current->next)
+				current = current->next;
+			current->next = neu;
+		}
 	}
-	else if (s[0] && s[1])
+	else
 	{
-		neu = neu_node(s);
-		current = sh->env;
-		while (current->next)
-			current = current->next;
-		current->next = neu;
+		current = ft_get_env_var(sh, sh->cmd[i]);
+		if (current)
+		{
+			current->unset = 0;
+			current->not_exp = 0;
+		}
 	}
 }
 
@@ -88,14 +113,12 @@ static char	**ft_sort_char_tab(char **tab)
 	return (tab);
 }
 
-void	ft_export(t_data *sh, char **s)
+void	ft_export(t_data *sh)
 {
 	char	**printout;
 	int		i;
 
-	if (s)
-		ft_enlist(sh, s);
-	else
+	if (!sh->cmd[1])
 	{
 		printout = env_tab(sh);
 		if (!printout)
@@ -111,5 +134,11 @@ void	ft_export(t_data *sh, char **s)
 			}
 			ft_free_tab(printout);
 		}
+	}
+	else
+	{
+		i = 0;
+		while (sh->cmd[++i])
+			ft_enlist(sh, i);
 	}
 }

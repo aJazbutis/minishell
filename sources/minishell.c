@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 20:21:54 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/10 22:23:25 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/11 20:45:52 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,12 +88,8 @@ int	main(void)
 			ft_env(sh);
 		if (!ft_strncmp(sh->cmd[0], "echo", 5))
 			ft_echo(sh);*/
-		if (!ft_strncmp(s[0], "export", 7))
-		{
-			s1 = ft_split(s[1], '=');
-			ft_export(sh, s1);
-			ft_free_tab(s1);
-		}
+		if (!ft_strncmp(sh->cmd[0], "export", 7))
+			ft_export(sh);
 
 		ft_execute_command(sh);
 		ft_execute_executable(sh, s[0], s);
