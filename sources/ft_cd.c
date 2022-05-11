@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 17:37:30 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/11 17:46:59 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/11 20:03:36 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,19 +78,19 @@ void	ft_cd(t_data *sh)
 			return ;
 		}
 	}
-	else if (!ft_strncmp(".", sh->cmd[1], ft_strlen(sh->cmd[1])))
-		return ;
+//	else if (!ft_strncmp(".", sh->cmd[1], ft_strlen(sh->cmd[1])))
+//		return ;
 	else if (*sh->cmd[1] == '~')
 	{
 		sh->cmd[1]++;
-		tmp = getenv("HOME"); 
-		tmp = ft_strjoin(tmp, sh->cmd[1]);
-		if (!tmp)
+		s = getenv("HOME"); 
+		s = ft_strjoin(s, sh->cmd[1]);
+		if (!s)
 			perror("system malfunction");
 		sh->cmd[1]--;
 	}
-	if (tmp)
-		s = tmp;
+	else
+		s = ft_strdup(sh->cmd[1]);//malloc xheck
 	tmp = ft_pwd_line();
 	if (chdir(s))
 	{
