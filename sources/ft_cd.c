@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 17:37:30 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/11 20:03:36 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/12 21:33:05 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,7 @@ void	ft_cd(t_data *sh)
 
 	tmp = NULL;
 	s = NULL;
+ft_underscore(sh);
 	if (!sh->cmd[1])
 	{
 		s =  ft_getenv(sh, "HOME");
@@ -107,10 +108,27 @@ void	ft_cd(t_data *sh)
 	g_status = errno;
 }
 
-void	ft_pwd(void)
+void	ft_pwd(t_data *sh)
 {
-	char msg[256];
+	char		msg[256];
+	if (!sh)
+		return ;
+/*	t_env_lst	*tmp;
+	int			i;
 
+	tmp = ft_get_env_var(sh, "_");
+	if (!tmp->unset)
+	{
+		if (tmp->val)
+			free(tmp->val);
+		i = 0;
+		while (sh->cmd[i + 1])
+			i++;
+		tmp->val = ft_strdup(sh->cmd[i]);
+		if (!tmp->val)
+			perror("system malfunction");
+	}*/
+	ft_underscore(sh);
 	if (!getcwd(msg, sizeof(msg)))
 	{
 		perror("minishell: pwd:");

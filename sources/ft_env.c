@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 20:50:26 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/07 18:41:43 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/12 21:15:56 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,15 @@ void	ft_env(t_data *sh)
 {
 	t_env_lst	*p;
 
+	p = ft_get_env_var(sh, "_");
+	if (!p->unset)
+	{
+		if (p->val)
+			free(p->val);
+		p->val = ft_strdup("somewhere/minishell/ft_env");
+		if (!p->val)
+			perror("system malfunction");
+	}
 	p = sh->env;
 	while (p)
 	{

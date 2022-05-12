@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 21:30:28 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/11 20:44:10 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/12 21:50:39 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ void	ft_export(t_data *sh)
 	char	**printout;
 	int		i;
 
+	ft_underscore(sh);
 	if (!sh->cmd[1])
 	{
 		printout = env_tab(sh);
@@ -129,6 +130,8 @@ void	ft_export(t_data *sh)
 			i = -1;
 			while (printout[++i])
 			{
+				if (printout[i][0] == '_' && printout[i][1] == '=')//strncmp?
+					continue ;
 				ft_putstr_fd(printout[i], 1);
 				ft_putchar_fd('\n', 1);
 			}

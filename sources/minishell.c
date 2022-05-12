@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 20:21:54 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/11 20:45:52 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/12 21:45:37 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,20 @@
 
 int	g_status;
 
-static void ft_reset_sh(t_data *sh, char *input)	
+/*static void ft_clean_sh(t_data *sh, char *sh->input)	
 {
-	free(input);
+	free(sh->input);
+	sh->here_doc = 0;
+	sh->limiter = NULL;
+	sh->append = 0;
+	sh->out = NULL;
+	ft_free_tab(sh->cmd);
+	sh->cmd = NULL;
+}*/
+static void ft_reset_sh(t_data *sh)	
+{
+	free(sh->input);
+	sh->input = NULL;
 	sh->here_doc = 0;
 	sh->limiter = NULL;
 	sh->append = 0;
@@ -27,19 +38,23 @@ static void ft_reset_sh(t_data *sh, char *input)
 
 int	main(void)
 {
-	char	*input;
 //	int		i;
-	char	**s;
-	char	**s1;
+//	char	**s;
+//	char	**s1;
 //	t_env_lst *env;
 //	t_env_lst *tmp;
 	t_data	*sh;
 
-	input = NULL;
-	s = NULL;
-	s1 = NULL;
-		sh = malloc(sizeof(t_data));
-		sh->env = NULL;
+	printf("ECHO NEEDS FIXXING\n");
+
+	g_status = 0;
+//	while (g_status++ < 128)
+//		printf("%s\n", strerror(g_status));
+//	s = NULL;
+//	s1 = NULL;
+	sh = malloc(sizeof(t_data));
+//	sh->env = NULL;
+	ft_memset(sh, 0, sizeof(sh));
 	ft_list_env(&sh->env);
 //	tmp = sh->env;
 //	while (tmp)
@@ -50,16 +65,16 @@ int	main(void)
 //	}
 	while (1)
 	{
-		input = readline("minishell-0.0$ ");
-		if (!input)
+		sh->input = readline("minishell-0.0$ ");
+		if (!sh->input)
 		{
 			ft_putstr_fd("exit\n", 2);
 			break ;
 		}
-		if (ft_strlen(input))
-			add_history(input);
-		s = ft_split(input, ' ');
-		sh->cmd = s;
+		if (ft_strlen(sh->input))
+			add_history(sh->input);
+		sh->cmd = ft_split(sh->input, ' ');
+//		sh->cmd = s;
 	//	printf("%s\n", sh->cmd[0]);
 //tmp = sh->env;
 //	while (tmp)
@@ -69,10 +84,17 @@ int	main(void)
 //		tmp = tmp->next;
 //	}
 		if (!ft_is_builtin(sh))
+		{
 			printf("work more\n");
+			if (*sh->cmd[0] == '.' || *sh->cmd[0] == '~')
+				ft_execute_executable(sh, sh->cmd[0], sh->cmd);
+			else
+				ft_execute_command(sh);
+		}
+
 /*		if (s && !ft_strncmp(s[0], "exit", 5))
 		{
-			free(input);
+			free(sh->input);
 			ft_exit(sh);
 		}
 	if (ft_strchr(s[0], '='))
@@ -80,7 +102,7 @@ int	main(void)
 
 		if (!ft_strncmp(s[0], "cd", 3))
 			ft_cd(sh, ft_strdup(s[1]));
-		if (!ft_strncmp(input, "pwd", 4))
+		if (!ft_strncmp(sh->input, "pwd", 4))
 			ft_pwd();
 		if (!ft_strncmp(s[0], "unset", 6))
 			ft_unset(sh, s[1]);
@@ -88,16 +110,14 @@ int	main(void)
 			ft_env(sh);
 		if (!ft_strncmp(sh->cmd[0], "echo", 5))
 			ft_echo(sh);*/
-		if (!ft_strncmp(sh->cmd[0], "export", 7))
-			ft_export(sh);
+	//	if (!ft_strncmp(sh->cmd[0], "export", 7))
+	//		ft_export(sh);
 
-		ft_execute_command(sh);
-		ft_execute_executable(sh, s[0], s);
-//		ft_free_tab(s);
-//		free(input);
-		ft_reset_sh(sh, input);
+	//		ft_free_tab(s);
+//		free(sh->input);
+		ft_reset_sh(sh);
 	}
-//	if (input)
+//	if (sh->input)
 		rl_clear_history();
 //	tmp = sh->env;
 //	while (tmp)

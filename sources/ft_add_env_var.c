@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 18:44:23 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/10 16:31:26 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/12 16:26:14 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,11 +72,18 @@ void	ft_add_env_var(t_data *sh)
 {
 	char	*cut[2];
 	char	*eq;
+	int		i;
+
+	i = -1;
+	while (sh->cmd[++i])
+	{
 
 
-	eq = ft_strchr(sh->cmd[0], '=');
-printf("%s\n", sh->cmd[0]);
-	cut[0] = ft_substr(sh->cmd[0], 0, eq - sh->cmd[0]);
+	eq = ft_strchr(sh->cmd[i], '=');
+	if (!eq)
+		continue ;
+printf("%s\n", sh->cmd[i]);
+	cut[0] = ft_substr(sh->cmd[i], 0, eq - sh->cmd[i]);
 	printf("%s\n", cut[0]);
 	if (!cut[0])
 	{
@@ -92,4 +99,5 @@ printf("%s\n", cut[1]);
 		return ;
 	}
 	ft_enlist(sh, cut);
+	}
 }

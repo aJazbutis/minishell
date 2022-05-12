@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 20:15:49 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/10 16:11:36 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/12 21:39:08 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ void	ft_unset(t_data *sh)
 	t_env_lst	*current;
 	t_env_lst	*tmp;
 
+	ft_underscore(sh);
 	current = sh->env;
 	if (!ft_strncmp(sh->cmd[1], sh->env->var, ft_strlen(sh->cmd[1])))
 	{

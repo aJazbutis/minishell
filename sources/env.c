@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:52:30 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/10 14:43:46 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/12 21:03:20 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,7 +128,6 @@ char	**env_tab(t_data *sh)
 		exit(errno);//cleanup
 	}
 	current = sh->env;
-
 	i = -1;
 	while (current)
 	{

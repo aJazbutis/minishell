@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:35:24 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/10 22:20:51 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/12 20:57:09 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,6 +49,8 @@ static char *ft_get_cmd(t_data *sh)
 		return (s);
 	}
 	path = ft_get_path(sh);
+	if (!path)
+		return (NULL);
 	i = -1;
 	while (path[++i])
 	{
@@ -88,7 +90,7 @@ static void	ft_procede(t_data *sh)
 	{
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(sh->cmd[0], 2);
-		ft_putstr_fd(": not found\n", 2);
+		ft_putstr_fd(": command not found\n", 2);
 		g_status = 127;
 		exit(127);
 	}
@@ -102,7 +104,7 @@ static void	ft_procede(t_data *sh)
 	}
 	if (execve(cmd, sh->cmd, envp) == -1)
 	{
-		perror("executable not executed");
+		perror("command not executed");
 		g_status = errno;
 		free(cmd);
 		ft_free_tab(envp);
@@ -112,7 +114,9 @@ static void	ft_procede(t_data *sh)
 
 void	ft_execute_command(t_data *sh)
 {
-	pid_t	id;
+	pid_t		id;
+	t_env_lst	*tmp;
+	int			i;
 
 	id = fork();
 	if (id == -1)
@@ -120,10 +124,20 @@ void	ft_execute_command(t_data *sh)
 		perror("fork kaputt");
 		g_status = errno;
 		return ;
-	}	
+	}
+	tmp = ft_get_env_var(sh, "_");
+	if (!tmp->unset)
+	{
+		if (tmp->val)
+			free(tmp->val);
+		i = 0;
+		while (sh->cmd[i + 1])
+			i++;
+		tmp->val = ft_strdup(sh->cmd[i]);
+		if (!tmp->val)
+			perror("system malfunction");
+	}
 	if (!id)
 		ft_procede(sh);
 	waitpid(id, &g_status, 0);
 }
-
-
