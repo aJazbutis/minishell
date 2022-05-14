@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 21:18:50 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/12 21:44:53 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/14 19:25:44 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,12 @@ int	ft_echo(t_data *sh)
 {
 	unsigned int	nl;
 	unsigned int	i;
+	char			*val;
 //	t_env_lst		*tmp;
 
 	nl = 1;
 	i = 1;
+	printf("*\n");
 	if (!ft_strncmp("-n", sh->cmd[1], ft_strlen(sh->cmd[1])))
 	{
 		i = 2;
@@ -36,9 +38,17 @@ int	ft_echo(t_data *sh)
 		if (!tmp->val)
 			perror("system malfunction");
 	}*/
+	printf("**\n");
 	while (sh->cmd[i])
 	{
-		ft_putstr_fd(sh->cmd[i], 1);
+		val = ft_getenv(sh, sh->cmd[i]);
+		if (val)
+		{
+			ft_putstr_fd(val, 1);
+			free(val);
+		}
+		else
+			ft_putstr_fd(sh->cmd[i], 1);
 		i++;
 		if (sh->cmd[i])
 			ft_putchar_fd(' ', 1);

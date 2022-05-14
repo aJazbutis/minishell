@@ -6,27 +6,62 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:59:23 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/12 21:32:58 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/14 19:21:40 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-void	ft_status(int status)
+void	ft_status(t_data *sh)
 {
-	char	*stts;
+	char		*stts;
+	t_env_lst	*tmp;
+	int			i;
+	int			status;
 
-	if (WIFEXITED(status))
-		status = WEXITSTATUS(status);
-	if (status == 127)
+	status = g_status;
+	if (WIFEXITED(g_status))
+		status = WEXITSTATUS(g_status);
+	
+	i = 0;
+	tmp = ft_get_env_var(sh, "_");
+	if (!tmp->unset)
 	{
-		ft_putstr_fd("minishell: 127: command not found\n", 2);
-		return ;
+		if (tmp->val)
+			free(tmp->val);
+		i = 0;
+		while (sh->cmd[i + 1])
+			i++;
+		if (i)
+			tmp->val = ft_strdup(sh->cmd[i]);
+		else
+			tmp->val = ft_itoa(status);
+		if (!tmp->val)
+			perror("system malfunction");
 	}
-	stts = strerror(status);
-	ft_putstr_fd(stts, 2);
-ft_putstr_fd("\n", 2);
+	if (!status)
+		ft_putstr_fd("minishell: 0: command not found\n", 2);
+	else if (status == 127) 
+		ft_putstr_fd("minishell: 127: command not found\n", 2);
+	else
+	{
+		ft_putstr_fd("minishell: ", 2);
+		if (i)
+			ft_putstr_fd(tmp->val, 2);
+		else
+		{
+			stts = ft_itoa(status);
+			if (!stts)
+				perror("system malfunction");
+			ft_putstr_fd(stts, 2);
+			free(stts);
+		}
+		ft_putstr_fd(": ", 2);
+		stts = strerror(status);
+		ft_putstr_fd(stts, 2);
+		ft_putstr_fd("\n", 2);
+	}
 }
 
 void	ft_underscore(t_data *sh)
@@ -72,7 +107,7 @@ static void ft_which_builtin(t_data *sh)
 	else if (ft_strchr(sh->cmd[0], '='))
 		ft_add_env_var(sh);
 	else if (*sh->cmd[0] == '?')
-		ft_status(g_status);
+		ft_status(sh);
 }
 		
 int	ft_is_builtin(t_data *sh)

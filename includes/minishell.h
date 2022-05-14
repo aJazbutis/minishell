@@ -32,7 +32,9 @@ typedef struct s_data
 	int			here_doc;
 	int			pp1[2];
 	char		*limiter;
+	char		*in;
 	char		*out;
+	char		*err;
 	int			append;
 	char		**cmd;
 }t_data;
@@ -49,9 +51,10 @@ void	ft_env(t_data *sh);
 void	ft_export(t_data *sh);
 void	ft_add_env_var(t_data *sh);
 int		ft_echo(t_data *sh);
-void	ft_execute_executable(t_data *sh, char *path, char **args);
+void	ft_execute_executable(t_data *sh);
 int		ft_is_builtin(t_data *sh);
 void	ft_execute_command(t_data *sh);
-void	ft_status(int status);
+void	ft_status(t_data *sh);
 void	ft_underscore(t_data *sh);
+void	ft_pathproofargs(t_data *sh);
 #endif

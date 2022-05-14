@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 20:21:54 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/12 21:45:37 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/14 20:16:09 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,10 +72,12 @@ int	main(void)
 			break ;
 		}
 		if (ft_strlen(sh->input))
+		{
 			add_history(sh->input);
 		sh->cmd = ft_split(sh->input, ' ');
 //		sh->cmd = s;
-	//	printf("%s\n", sh->cmd[0]);
+//		printf("%s\n", sh->input);
+//		printf("%p\n", sh->cmd);
 //tmp = sh->env;
 //	while (tmp)
 //	{
@@ -87,7 +89,7 @@ int	main(void)
 		{
 			printf("work more\n");
 			if (*sh->cmd[0] == '.' || *sh->cmd[0] == '~')
-				ft_execute_executable(sh, sh->cmd[0], sh->cmd);
+				ft_execute_executable(sh);
 			else
 				ft_execute_command(sh);
 		}
@@ -115,6 +117,7 @@ int	main(void)
 
 	//		ft_free_tab(s);
 //		free(sh->input);
+		}
 		ft_reset_sh(sh);
 	}
 //	if (sh->input)

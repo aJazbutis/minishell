@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 18:56:45 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/09 19:07:54 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/14 20:33:25 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	ft_exit(t_data *sh)
 {
-	int	ret;
+	long long	ret;
 
 	ret = 0;
 	if (sh->cmd[1])

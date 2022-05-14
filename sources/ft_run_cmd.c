@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:35:24 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/12 20:57:09 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/14 22:44:54 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,7 +91,7 @@ static void	ft_procede(t_data *sh)
 		ft_putstr_fd("minishell: ", 2);
 		ft_putstr_fd(sh->cmd[0], 2);
 		ft_putstr_fd(": command not found\n", 2);
-		g_status = 127;
+//		g_status = 127;
 		exit(127);
 	}
 	envp = env_tab(sh);
@@ -99,13 +99,14 @@ static void	ft_procede(t_data *sh)
 	{
 		perror ("system malfunction");
 		free(cmd);
-		g_status = errno;
+//		g_status = errno;
 		exit(errno);
 	}
+	ft_pathproofargs(sh);
 	if (execve(cmd, sh->cmd, envp) == -1)
 	{
 		perror("command not executed");
-		g_status = errno;
+//		g_status = errno;
 		free(cmd);
 		ft_free_tab(envp);
 		exit(errno);
@@ -125,6 +126,8 @@ void	ft_execute_command(t_data *sh)
 		g_status = errno;
 		return ;
 	}
+	if (id)
+	{
 	tmp = ft_get_env_var(sh, "_");
 	if (!tmp->unset)
 	{
@@ -136,6 +139,7 @@ void	ft_execute_command(t_data *sh)
 		tmp->val = ft_strdup(sh->cmd[i]);
 		if (!tmp->val)
 			perror("system malfunction");
+	}
 	}
 	if (!id)
 		ft_procede(sh);
