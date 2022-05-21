@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:52:30 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/20 19:02:04 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/21 23:19:26 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static t_env_lst	*neu_node(char *str)
 	neu = malloc(sizeof(t_env_lst));
 	if (!neu)
 		return (NULL);
-	ft_memset(neu, 0, sizeof(neu));
+	ft_memset(neu, 0, sizeof(*neu));
 	s = ft_strchr(str, '=');
 	neu->var = ft_substr(str, 0, s - str);
 	if (!(neu->var))

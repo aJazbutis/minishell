@@ -6,13 +6,13 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 21:57:46 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/21 23:02:25 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/21 23:21:20 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static void	ft_close_pipes(t_data *sh, int pipe_fail)
+/*static void	ft_close_pipes(t_data *sh, int pipe_fail)
 {
 	int	i;
 	int	n;
@@ -133,12 +133,12 @@ static void	ft_pipeless(t_data *sh)
 
 void	ft_exec(t_data *sh)
 {
-	int		i;
-	t_cmd	tmp;
+//	int		i;
+//	t_cmd	tmp;
 
 	if (!sh->pp_n)
 		ft_pipeless(sh);
-	else
+/*	else
 	{
 		i = -1;
 		sh->pp = (int *)malloc(sizeof(int) * 2 * (sh->pp_n));
@@ -171,8 +171,8 @@ void	ft_exec(t_data *sh)
 			if (tmp)
 				tmp = tmp->next;
 //		}
-	}
-	ft_close_pipes(sh, 0);
-	while (j--)
-		wait(&sh->status);
+	}*/
+//	ft_close_pipes(sh, 0);
+//	while (j--)
+//		wait(&sh->status);
 }
