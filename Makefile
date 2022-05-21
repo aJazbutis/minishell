@@ -6,7 +6,7 @@
 #    By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/20 18:13:18 by ajazbuti          #+#    #+#              #
-#    Updated: 2022/05/10 22:17:10 by ajazbuti         ###   ########.fr        #
+#    Updated: 2022/05/21 22:26:17 by ajazbuti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,8 +17,8 @@ CFLAGS = -Wall -Werror -Wextra
 RM = rm -rf
 
 SRC = minishell.c utils1.c ft_cd.c env.c env_var.c ft_env.c ft_export.c\
-	  ft_add_env_var.c ft_echo.c ft_execute_executable.c ft_exit.c\
-	  ft_run_cmd.c
+	  ft_add_env_var.c ft_echo.c ft_exec_exe.c ft_exit.c\
+	  ft_exec_cmd.c cmd_lst.c ft_execute.c
 
 SRC_D = ./sources/
 
@@ -26,7 +26,7 @@ SRC_D = ./sources/
 
 OBJ = ${SRC:.c=.o}
 
-LIBFT_D = ../../libft_42/
+LIBFT_D = ../../libft_github/
 
 LIBFT = ${LIBFT_D}libft.a
 

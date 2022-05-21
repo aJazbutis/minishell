@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 20:50:26 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/12 21:15:56 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/21 19:38:27 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	ft_env(t_data *sh)
 	p = sh->env;
 	while (p)
 	{
-		if (!p->unset && !p->not_exp)
+		if (!p->unset && !p->not_exp && p->val)
 		{
 			ft_putstr_fd(p->var, 1);
 			ft_putchar_fd('=', 1);

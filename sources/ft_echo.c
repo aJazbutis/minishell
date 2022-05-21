@@ -6,13 +6,13 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 21:18:50 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/14 19:25:44 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/20 19:07:58 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	ft_echo(t_data *sh)
+int	ft_echo(t_data *sh, char **cmd)
 {
 	unsigned int	nl;
 	unsigned int	i;
@@ -21,11 +21,14 @@ int	ft_echo(t_data *sh)
 
 	nl = 1;
 	i = 1;
-	printf("*\n");
-	if (!ft_strncmp("-n", sh->cmd[1], ft_strlen(sh->cmd[1])))
+//	printf("*\n");
+	if (cmd[1])
 	{
-		i = 2;
-		nl = 0;
+		if (!ft_strncmp("-n", cmd[1], ft_strlen(cmd[1])))
+		{
+			i = 2;
+			nl = 0;
+		}
 	}
 /*	tmp = ft_get_env_var(sh, "_");
 	if (!tmp->unset)
@@ -38,19 +41,19 @@ int	ft_echo(t_data *sh)
 		if (!tmp->val)
 			perror("system malfunction");
 	}*/
-	printf("**\n");
-	while (sh->cmd[i])
+//	printf("**\n");
+	while (cmd[i])
 	{
-		val = ft_getenv(sh, sh->cmd[i]);
+		val = ft_getenv(sh, cmd[i]);
 		if (val)
 		{
 			ft_putstr_fd(val, 1);
 			free(val);
 		}
 		else
-			ft_putstr_fd(sh->cmd[i], 1);
+			ft_putstr_fd(cmd[i], 1);
 		i++;
-		if (sh->cmd[i])
+		if (cmd[i])
 			ft_putchar_fd(' ', 1);
 	}
 	if (nl)

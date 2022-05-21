@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/26 17:37:30 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/12 21:33:05 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/21 21:23:04 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,10 +21,7 @@ static char	*ft_pwd_line(void)
 
 	ret = NULL;
 	if (!getcwd(msg, sizeof(msg)))
-	{
 		perror("system malfunction");
-//		g_status = errno;
-	}
 	else
 	{
 		ret = ft_strdup(msg);
@@ -61,59 +58,63 @@ static void	ft_update_pwd(t_data *sh, char *old)
 	}	
 }
 
-void	ft_cd(t_data *sh)
+void	ft_cd(t_data *sh, char **cmd)
 {
 	char	*tmp;
 	char	*s;
 
 	tmp = NULL;
 	s = NULL;
-ft_underscore(sh);
-	if (!sh->cmd[1])
+	ft_underscore(sh, cmd);
+	if (!cmd[1])
 	{
 		s =  ft_getenv(sh, "HOME");
 		if (!s)
 		{
-			g_status = 1;
+			sh->status = 1;
 			ft_putstr_fd("minishell: cd: HOME not set\n", 2);
-			return ;
+	//		return ;
 		}
 	}
-//	else if (!ft_strncmp(".", sh->cmd[1], ft_strlen(sh->cmd[1])))
-//		return ;
-	else if (*sh->cmd[1] == '~')
+	else if (*cmd[1] == '~')
 	{
-		sh->cmd[1]++;
+		cmd[1]++;
 		s = getenv("HOME"); 
-		s = ft_strjoin(s, sh->cmd[1]);
+		s = ft_strjoin(s, cmd[1]);
 		if (!s)
 			perror("system malfunction");
-		sh->cmd[1]--;
+		cmd[1]--;
 	}
 	else
-		s = ft_strdup(sh->cmd[1]);//malloc xheck
+	{
+		s = ft_strdup(cmd[1]);//malloc xheck
+		if (!s)
+			perror("system malfunction");
+	}
+	if (!s)
+		return ;
 	tmp = ft_pwd_line();
 	if (chdir(s))
 	{
 		free(tmp);
-		tmp = ft_strjoin("minishell: cd: ", sh->cmd[1]);
-		if (!tmp)
+		tmp = ft_strjoin("minishell: cd: ", cmd[1]);
+		if (tmp)
 			perror("system malfunction");
-		perror(tmp);
+		else
+			perror(tmp);
 		free(tmp);
 	}
 	else
 		ft_update_pwd(sh, tmp);
 	free(s);
-	g_status = errno;
 }
 
-void	ft_pwd(t_data *sh)
+void	ft_pwd(t_data *sh, char **cmd)
 {
 	char		msg[256];
 	if (!sh)
 		return ;
-/*	t_env_lst	*tmp;
+	t_env_lst	*tmp;
 	int			i;
 
 	tmp = ft_get_env_var(sh, "_");
@@ -122,17 +123,17 @@ void	ft_pwd(t_data *sh)
 		if (tmp->val)
 			free(tmp->val);
 		i = 0;
-		while (sh->cmd[i + 1])
+		while (cmd[i + 1])
 			i++;
-		tmp->val = ft_strdup(sh->cmd[i]);
+		tmp->val = ft_strdup(cmd[i]);
 		if (!tmp->val)
 			perror("system malfunction");
-	}*/
-	ft_underscore(sh);
+	}
+//	ft_underscore(sh);
 	if (!getcwd(msg, sizeof(msg)))
 	{
 		perror("minishell: pwd:");
-		g_status = errno;
+		sh->status = errno;
 	}
 	else
 	{

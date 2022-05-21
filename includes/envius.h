@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:49:05 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/06 16:07:01 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/20 00:05:41 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,8 @@
 
 typedef struct s_env_lst
 {
-	int					unset;
-	int					not_exp;
+	unsigned int		unset;
+	unsigned int		not_exp;
 	char				*var;
 	char				*val;
 	struct s_env_lst	*next;

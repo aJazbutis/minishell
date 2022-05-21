@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/02 15:52:30 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/12 21:03:20 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/20 19:02:04 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,10 +111,27 @@ static int	ft_env_size(t_data *sh)
 	return (i);
 }
 
-char	**env_tab(t_data *sh)
+static char	*ft_qq_str(char *s)
+{
+	char	*s1;
+
+	if (!s)
+		return (ft_strdup("\"\""));
+	else
+	{
+		s1 = ft_strjoin("\"", s);
+		if (!s1)
+			perror("system malfunction");
+		s = ft_strjoin(s1, "\"");
+		free(s1);
+		return (s);
+	}
+}
+
+char	**env_tab(t_data *sh, int x)
 {
 	int			i;
-	char		*s1;
+	char		*s[2];
 	t_env_lst	*current;
 	char		**env;
 
@@ -134,31 +151,36 @@ char	**env_tab(t_data *sh)
 
 		if (!current->unset && !current->not_exp)
 		{
-//			write(1, current->var, ft_strlen(current->var));
-
 //			printf("%s\n", current->var);
-			s1 = ft_strjoin(current->var, "=");
-			if (!s1)
+			s[0] = ft_strjoin(current->var, "=");
+			if (!s[0])
 			{
 				perror("system malfunction");
-				exit(errno);//cleanup
+				ft_free_tab(env);
+				return (NULL);
+//				exit(errno);//cleanup
 			}
-			env[++i] = ft_strjoin(s1, current->val);
-			free(s1);
+			if (x)
+			{
+				s[1] = ft_qq_str(current->val);
+				env[++i] = ft_strjoin(s[0], s[1]);
+				free(s[1]);
+			}
+			else
+			{
+				if (current->val)
+					env[++i] = ft_strjoin(s[0], current->val);
+			}
+			free(s[0]);
 			if (!env[i])
 			{
 				perror("system malfunction");
 				ft_free_tab(env);
-				exit(errno);////cleanup;
+				return (NULL);
+//				exit(errno);////cleanup;
 			}
 		}
 		current = current->next;
 	}
 	return (env);
 }
-
-	
-
-
-	
-

@@ -6,35 +6,34 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:59:23 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/14 19:21:40 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/21 19:36:13 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 
-void	ft_status(t_data *sh)
+void	ft_status(t_data *sh, char **cmd)
 {
 	char		*stts;
 	t_env_lst	*tmp;
-	int			i;
+	int			j;
 	int			status;
 
-	status = g_status;
-	if (WIFEXITED(g_status))
-		status = WEXITSTATUS(g_status);
+	status = sh->status;
+	if (WIFEXITED(sh->status))
+		status = WEXITSTATUS(sh->status);
 	
-	i = 0;
 	tmp = ft_get_env_var(sh, "_");
 	if (!tmp->unset)
 	{
 		if (tmp->val)
 			free(tmp->val);
-		i = 0;
-		while (sh->cmd[i + 1])
-			i++;
-		if (i)
-			tmp->val = ft_strdup(sh->cmd[i]);
+		j = 0;
+		while (cmd[j + 1])
+			j++;
+		if (j)
+			tmp->val = ft_strdup(cmd[j]);
 		else
 			tmp->val = ft_itoa(status);
 		if (!tmp->val)
@@ -47,7 +46,7 @@ void	ft_status(t_data *sh)
 	else
 	{
 		ft_putstr_fd("minishell: ", 2);
-		if (i)
+		if (j)
 			ft_putstr_fd(tmp->val, 2);
 		else
 		{
@@ -64,20 +63,20 @@ void	ft_status(t_data *sh)
 	}
 }
 
-void	ft_underscore(t_data *sh)
+void	ft_underscore(t_data *sh, char **cmd)
 {
 	t_env_lst	*tmp;
-	int			i;
+	int			j;
 
 	tmp = ft_get_env_var(sh, "_");
 	if (!tmp->unset)
 	{
 		if (tmp->val)
 			free(tmp->val);
-		i = 0;
-		while (sh->cmd[i + 1])
-			i++;
-		tmp->val = ft_strdup(sh->cmd[i]);
+		j = 0;
+		while (cmd[j + 1])
+			j++;
+		tmp->val = ft_strdup(cmd[j]);
 		if (!tmp->val)
 			perror("system malfunction");
 	}
@@ -88,41 +87,58 @@ void	ft_prompt(char *s)
 	ft_putstr_fd(s, 2);
 }
 
-static void ft_which_builtin(t_data *sh)
+void ft_which_builtin(t_data *sh, char **cmd)
 {
-	if (!ft_strncmp("echo", sh->cmd[0], ft_strlen(sh->cmd[0])))
-		ft_echo(sh);
-	else if	(!ft_strncmp("pwd", sh->cmd[0], ft_strlen(sh->cmd[0])))
-		ft_pwd(sh);
-	else if (!ft_strncmp("cd", sh->cmd[0], ft_strlen(sh->cmd[0])))
-		ft_cd(sh);
-	else if (!ft_strncmp("unset", sh->cmd[0], ft_strlen(sh->cmd[0])))
-		ft_unset(sh);
-	else if (!ft_strncmp("export", sh->cmd[0], ft_strlen(sh->cmd[0])))
-		ft_export(sh);
-	else if (!ft_strncmp("exit", sh->cmd[0], ft_strlen(sh->cmd[0])))
-		ft_exit(sh);
-	else if (!ft_strncmp("env", sh->cmd[0], ft_strlen(sh->cmd[0])))
-		ft_env(sh);
-	else if (ft_strchr(sh->cmd[0], '='))
-		ft_add_env_var(sh);
-	else if (*sh->cmd[0] == '?')
-		ft_status(sh);
+	if (!ft_strncmp("echo", cmd[0], ft_strlen(cmd[0])))
+		ft_echo(sh, cmd);
+	else if	(!ft_strncmp("pwd", cmd[0], ft_strlen(cmd[0])))
+		ft_pwd(sh, cmd);
+	else if (!ft_strncmp("cd", cmd[0], ft_strlen(cmd[0])))
+		ft_cd(sh, cmd);
+	else if (!ft_strncmp("unset", cmd[0], ft_strlen(cmd[0])))
+		ft_unset(sh, cmd);
+	else if (!ft_strncmp("export", cmd[0], ft_strlen(cmd[0])))
+		ft_export(sh, cmd);
+	else if (!ft_strncmp("exit", cmd[0], ft_strlen(cmd[0])))
+		ft_exit(sh, cmd);
+	else if (!ft_strncmp("env", cmd[0], ft_strlen(cmd[0])))
+		ft_env(sh, cmd);
+	else if (ft_strchr(cmd[0], '='))
+		ft_add_env_var(sh, cmd);
+	else if (*cmd[0] == '?')//
+		ft_status(sh, cmd);
 }
 		
-int	ft_is_builtin(t_data *sh)
+/*int	ft_is_builtin(t_data *sh, char *cmd)
 {
-	if (!ft_strncmp("echo", sh->cmd[0], ft_strlen(sh->cmd[0])) ||
-		!ft_strncmp("pwd", sh->cmd[0], ft_strlen(sh->cmd[0])) ||
-		!ft_strncmp("cd", sh->cmd[0], ft_strlen(sh->cmd[0])) ||
-		!ft_strncmp("unset", sh->cmd[0], ft_strlen(sh->cmd[0])) ||
-		!ft_strncmp("export", sh->cmd[0], ft_strlen(sh->cmd[0])) ||
-		!ft_strncmp("exit", sh->cmd[0], ft_strlen(sh->cmd[0])) ||
-		!ft_strncmp("env", sh->cmd[0], ft_strlen(sh->cmd[0])) ||
-		(ft_strchr(sh->cmd[0], '=')) ||
-		(*sh->cmd[0] == '?'))
+	if (!ft_strncmp("echo", sh->cmd[i][0], ft_strlen(sh->cmd[i][0])) ||
+		!ft_strncmp("pwd", sh->cmd[i][0], ft_strlen(sh->cmd[i][0])) ||
+		!ft_strncmp("cd", sh->cmd[i][0], ft_strlen(sh->cmd[i][0])) ||
+		!ft_strncmp("unset", sh->cmd[i][0], ft_strlen(sh->cmd[i][0])) ||
+		!ft_strncmp("export", sh->cmd[i][0], ft_strlen(sh->cmd[i][0])) ||
+		!ft_strncmp("exit", sh->cmd[i][0], ft_strlen(sh->cmd[i][0])) ||
+		!ft_strncmp("env", sh->cmd[i][0], ft_strlen(sh->cmd[i][0])) ||
+		(ft_strchr(sh->cmd[i][0], '=')) ||
+		(*sh->cmd[i][0] == '?'))
 	{
-		ft_which_builtin(sh);
+//		ft_which_builtin(sh);
+		return (1);
+	}
+	return (0);
+}*/
+int	ft_is_builtin(char *cmd)
+{
+	if (!ft_strncmp("echo", cmd, ft_strlen(cmd)) ||
+		!ft_strncmp("pwd", cmd, ft_strlen(cmd)) ||
+		!ft_strncmp("cd", cmd, ft_strlen(cmd)) ||
+		!ft_strncmp("unset", cmd, ft_strlen(cmd)) ||
+		!ft_strncmp("export", cmd, ft_strlen(cmd)) ||
+		!ft_strncmp("exit", cmd, ft_strlen(cmd)) ||
+		!ft_strncmp("env", cmd, ft_strlen(cmd)) ||
+		(ft_strchr(cmd, '=')) ||
+		(*cmd == '?'))
+	{
+//		ft_which_builtin(sh);
 		return (1);
 	}
 	return (0);
