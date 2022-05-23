@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 20:21:54 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/23 16:23:00 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/23 21:16:30 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ int	main(int argc, char	**argv)
 	{
 		i = -1;
 //		while (tmp->cmd[++i])
-		   printf("%p\n",tmp->cmd[++i]);	
+		   printf("%s\n",tmp->cmd[++i]);	
 		tmp = tmp->next;
 	}
 	printf("%d\n", sh->pp_n);

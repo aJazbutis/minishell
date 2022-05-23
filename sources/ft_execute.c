@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 21:57:46 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/23 17:19:50 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/23 22:20:06 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,7 +94,7 @@ static void	ft_child(t_data *sh, char **cmd, int i)
 	if (sh->id == 0)
 	{
 
-		printf("%s\n", cmd[0]);
+//		printf("%s\n", cmd[0]);
 		ft_dup_dup(sh, i);
 		ft_close_pipes(sh, 0);
 		//

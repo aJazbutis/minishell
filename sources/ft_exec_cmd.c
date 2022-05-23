@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_run_cmd.c                                       :+:      :+:    :+:   */
+/*   ft_exec_cmd.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:35:24 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/21 19:21:12 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/23 22:26:49 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,6 +94,19 @@ void	ft_exec_cmd(t_data *sh, char **cmd)
 //		g_status = 127;
 		exit(127);
 	}
+
+	t_env_lst	*tmp;
+	
+	tmp = ft_get_env_var(sh, "_");
+	if (!tmp->unset)
+	{
+		if (tmp->val)
+			free(tmp->val);
+		tmp->val = ft_strdup(cmnd);
+		if (!tmp->val)
+			perror("system malfunction");
+	}
+
 	envp = env_tab(sh, 0);
 	if (!envp)
 	{
@@ -102,7 +115,10 @@ void	ft_exec_cmd(t_data *sh, char **cmd)
 //		g_status = errno;
 		exit(errno);
 	}
+
 	ft_pathproofargs(cmd);
+
+	
 	if (execve(cmnd, cmd, envp) == -1)
 	{
 		perror("command not executed");

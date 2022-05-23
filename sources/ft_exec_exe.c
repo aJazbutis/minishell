@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_execute_executable.c                            :+:      :+:    :+:   */
+/*   ft_exec_exe.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/09 13:54:13 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/20 22:56:49 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/23 22:27:22 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,6 +70,19 @@ void	ft_exec_exe(t_data *sh, char **cmd)
 //		g_status = errno;
 		exit(errno);
 	}
+
+	t_env_lst	*tmp;
+	
+	tmp = ft_get_env_var(sh, "_");
+	if (!tmp->unset)
+	{
+		if (tmp->val)
+			free(tmp->val);
+		tmp->val = ft_strdup(pth);
+		if (!tmp->val)
+			perror("system malfunction");
+	}
+
 	envp = env_tab(sh, 0);
 	if (!envp)
 	{
@@ -80,6 +93,8 @@ void	ft_exec_exe(t_data *sh, char **cmd)
 	}
 	ft_pathproofargs(cmd);
 //	printf("%s\n", sh->cmd[1]);
+
+
 	if (execve(pth, cmd, envp) == -1)
 	{
 		perror("executable not executed");
