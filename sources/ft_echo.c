@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/07 21:18:50 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/20 19:07:58 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/22 21:30:04 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,7 @@ int	ft_echo(t_data *sh, char **cmd)
 	while (cmd[i])
 	{
 		val = ft_getenv(sh, cmd[i]);
+//		printf("%s\n", val);
 		if (val)
 		{
 			ft_putstr_fd(val, 1);

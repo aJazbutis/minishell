@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 18:59:23 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/21 19:36:13 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/21 23:34:12 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,7 +102,7 @@ void ft_which_builtin(t_data *sh, char **cmd)
 	else if (!ft_strncmp("exit", cmd[0], ft_strlen(cmd[0])))
 		ft_exit(sh, cmd);
 	else if (!ft_strncmp("env", cmd[0], ft_strlen(cmd[0])))
-		ft_env(sh, cmd);
+		ft_env(sh);
 	else if (ft_strchr(cmd[0], '='))
 		ft_add_env_var(sh, cmd);
 	else if (*cmd[0] == '?')//

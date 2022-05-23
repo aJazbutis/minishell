@@ -15,6 +15,7 @@
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>
+# include <fcntl.h>
 # include <stdlib.h>
 # include <unistd.h>
 # include <signal.h>
@@ -47,10 +48,10 @@ typedef struct s_data
 	t_env_lst	*env;
 	char		*input;
 	int			here_doc;
+	char		*limiter;
 	int			pp1[4];
 	int			*pp;
 	int			pp_n;
-	char		*limiter;
 	t_cmd		*cmd;
 	pid_t		id;
 	int			status;
@@ -60,6 +61,7 @@ typedef struct s_data
 	char		*in;
 	char		*out;
 	char		*err;
+	char		*location;
 }t_data;
 
 void		ft_prompt(char *s);

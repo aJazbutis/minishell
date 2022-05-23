@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 20:21:54 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/21 23:02:05 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/23 16:23:00 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,9 @@ static void ft_reset_sh(t_data *sh)
 	sh->here_doc = 0;
 	free(sh->limiter);
 	sh->limiter = NULL;
+	if (sh->pp)
+		free(sh->pp);
+	sh->pp = NULL;
 
 	ft_cmdclear(&sh->cmd);
 
@@ -87,14 +90,12 @@ int	main(int argc, char	**argv)
 
 {
 	int		i = 0;
-//	char	**s;
-//	char	**s1;
+	char	*s1;
 //	t_env_lst *env;
 //	t_env_lst *tmp;
 	t_data	*sh;
 	//	g_status = 0;
-//	s = NULL;
-//	s1 = NULL;
+	s1 = NULL;
 	sh = malloc(sizeof(t_data));
 	ft_memset(sh, 0, sizeof(sh));
 	ft_list_env(&sh->env);
@@ -109,7 +110,10 @@ int	main(int argc, char	**argv)
 	sh->st_fd[0] = dup(0);
 	sh->st_fd[1] = dup(1);
 	sh->st_fd[2] = dup(2);
-//	t_cmd	*tmp;
+	s1 = ft_getenv(sh, "_");
+	sh->location = ft_strjoin(s1, "-ft_env");
+	free(s1);
+	t_cmd	*tmp;
 
 /*	while (argv[++i])
 	{
@@ -144,7 +148,7 @@ int	main(int argc, char	**argv)
 	{
 
 	i = -1;
-		sh->input = readline("minishell-0.0$ ");
+		sh->input = readline("minishell-1.0$ ");
 		if (!sh->input)
 		{
 			ft_putstr_fd("exit\n", 2);
@@ -153,17 +157,28 @@ int	main(int argc, char	**argv)
 		if (ft_strlen(sh->input))
 		{
 			add_history(sh->input);
-			s = ft_split(sh->input, '"');
+			s = ft_split(sh->input, '|');
 			while (s[++i])
 				ft_cmdadd_back(&sh->cmd, ft_cmdnew(ft_split(s[i], ' ')));	
 			ft_free_tab(s);
 			sh->pp_n = ft_cmdsize(sh->cmd) - 1;
+	tmp = sh->cmd;
+	while (tmp)
+	{
+		i = -1;
+//		while (tmp->cmd[++i])
+		   printf("%p\n",tmp->cmd[++i]);	
+		tmp = tmp->next;
+	}
+	printf("%d\n", sh->pp_n);
+
 			ft_exec(sh);
 		}
 		ft_reset_sh(sh);
 	}
 	rl_clear_history();
 ft_reset_sh(sh);
+free(sh->location);
 
 	ft_clean_env(&sh->env);
 	free(sh);
