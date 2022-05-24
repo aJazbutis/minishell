@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 20:21:54 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/23 21:16:30 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/24 23:33:47 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,18 +94,29 @@ int	main(int argc, char	**argv)
 //	t_env_lst *env;
 //	t_env_lst *tmp;
 	t_data	*sh;
-	//	g_status = 0;
+	t_flst	*in;
+	t_flst	*out;
+
+	if (!argc)
+		exit(1);
 	s1 = NULL;
 	sh = malloc(sizeof(t_data));
 	ft_memset(sh, 0, sizeof(sh));
 	ft_list_env(&sh->env);
-	if (argc > 1 )
+/*	if (argc > 1 )
 	{
 		sh->in = argv[1];
 		if (argc > 2)
 			sh->out = argv[2];
 		if (argc > 3)
 			sh->err = argv[3];
+	}*/
+	while (argv[++i])
+	{
+		if (i % 2)
+			ft_flstadd_back(&in, ft_flstnew(ft_strdup(argv[i]), 0));
+		else
+			ft_flstadd_back(&out, ft_flstnew(ft_strdup(argv[i]), 0));
 	}
 	sh->st_fd[0] = dup(0);
 	sh->st_fd[1] = dup(1);
@@ -159,7 +170,14 @@ int	main(int argc, char	**argv)
 			add_history(sh->input);
 			s = ft_split(sh->input, '|');
 			while (s[++i])
-				ft_cmdadd_back(&sh->cmd, ft_cmdnew(ft_split(s[i], ' ')));	
+			{
+				if (!i)
+					ft_cmdadd_back(&sh->cmd, ft_cmdnew(ft_split(s[i], ' '), in, NULL));
+				else if (s[i + 1] == NULL)
+					ft_cmdadd_back(&sh->cmd, ft_cmdnew(ft_split(s[i], ' '), NULL, out));
+				else
+					ft_cmdadd_back(&sh->cmd, ft_cmdnew(ft_split(s[i], ' '), NULL, NULL));	
+			}
 			ft_free_tab(s);
 			sh->pp_n = ft_cmdsize(sh->cmd) - 1;
 	tmp = sh->cmd;

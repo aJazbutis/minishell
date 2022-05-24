@@ -1,20 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cmd_lst.c                                          :+:      :+:    :+:   */
+/*   flst.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/05/18 14:47:43 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/24 19:09:16 by ajazbuti         ###   ########.fr       */
+/*   Created: 2022/05/24 19:03:10 by ajazbuti          #+#    #+#             */
+/*   Updated: 2022/05/24 19:03:14 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_cmdadd_back(t_cmd **lst, t_cmd *new)
+void	ft_flstadd_back(t_flst **lst, t_flst *new)
 {
-	t_cmd	*current;
+	t_flst	*current;
 
 	if (!(*lst))
 		(*lst) = new;
@@ -27,10 +27,10 @@ void	ft_cmdadd_back(t_cmd **lst, t_cmd *new)
 	}
 }
 
-void	ft_cmdclear(t_cmd **lst)
+void	ft_flstclear(t_flst **lst)
 {
-	t_cmd	*current;
-	t_cmd	*begin_lst;
+	t_flst	*current;
+	t_flst	*begin_lst;
 
 	if (*lst && lst)
 	{
@@ -39,32 +39,29 @@ void	ft_cmdclear(t_cmd **lst)
 		{
 			current = begin_lst;
 			begin_lst = begin_lst->next;
-			ft_free_tab(current->cmd);
-			ft_flstclear(&current->in);
-			ft_flstclear(&current->out);
+			free(current->file);
 			free(current);
 		}
 		*lst = NULL;
 	}
 }
 
-t_cmd	*ft_cmdnew(char **cmd, t_flst *in, t_flst *out)
+t_flst	*ft_flstnew(char *file, int append)
 {
-	t_cmd	*head;
+	t_flst	*head;
 
 	head = NULL;
-	head = (t_cmd *)malloc(sizeof(t_cmd));
+	head = (t_flst *)malloc(sizeof(t_flst));
 	if (head)
 	{
-		(*head).cmd = cmd;
-		(*head).in = in;
-		(*head).out = out;
+		(*head).file = file;
+		(*head).append = append;
 		(*head).next = NULL;
 	}
 	return (head);
 }
 
-int	ft_cmdsize(t_cmd *lst)
+int	ft_flstsize(t_flst *lst)
 {
 	int	i;
 

@@ -37,9 +37,18 @@ typedef struct s_fd
 	int			append;
 }t_fd;
 
+typedef struct s_flst
+{
+	char			*file;
+	int				append;
+	struct s_flst	*next;
+}t_flst;
+
 typedef struct s_cmd
 {
 	char	**cmd;
+	t_flst	*in;
+	t_flst	*out;
 	struct s_cmd	*next;
 }t_cmd;
 
@@ -85,8 +94,16 @@ void		ft_status(t_data *sh, char **cmd);
 void		ft_underscore(t_data *sh, char **cmd);
 void		ft_pathproofargs(/*t_data *sh,*/ char **cmd);
 
-t_cmd		*ft_cmdnew(char **cmd);
+t_cmd		*ft_cmdnew(char **cmd, t_flst *in, t_flst *out);
 int			ft_cmdsize(t_cmd *lst);
 void		ft_cmdadd_back(t_cmd **lst, t_cmd *new);
 void		ft_cmdclear(t_cmd **lst);
+
+t_flst		*ft_flstnew(char *file, int append);
+int			ft_flstsize(t_flst *lst);
+void		ft_flstadd_back(t_flst **lst, t_flst *new);
+void		ft_flstclear(t_flst **lst);
+
+int			ft_redir_out(t_flst *out);
+int			ft_redir_in(t_flst *in);
 #endif
