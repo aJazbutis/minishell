@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/04/20 20:21:54 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/24 23:33:47 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/25 00:11:23 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -193,6 +193,8 @@ int	main(int argc, char	**argv)
 			ft_exec(sh);
 		}
 		ft_reset_sh(sh);
+		in = NULL;
+		out = NULL;
 	}
 	rl_clear_history();
 ft_reset_sh(sh);
