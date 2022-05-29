@@ -6,7 +6,7 @@
 #    By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/04/20 18:13:18 by ajazbuti          #+#    #+#              #
-#    Updated: 2022/05/24 19:03:30 by ajazbuti         ###   ########.fr        #
+#    Updated: 2022/05/29 23:38:21 by ajazbuti         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -18,7 +18,8 @@ RM = rm -rf
 
 SRC = minishell.c utils1.c ft_cd.c env.c env_var.c ft_env.c ft_export.c\
 	  ft_add_env_var.c ft_echo.c ft_exec_exe.c ft_exit.c\
-	  ft_exec_cmd.c cmd_lst.c ft_execute.c flst.c ft_redir.c
+	  ft_exec_cmd.c cmd_lst.c ft_execute.c flst.c ft_redir.c\
+	  ft_heredoc.c here_lst.c
 
 SRC_D = ./sources/
 

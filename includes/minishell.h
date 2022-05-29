@@ -12,6 +12,9 @@
 #ifndef MINISHELL_H
 #define MINISHELL_H
 # include <stdio.h>
+
+# include "libft.h"
+
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <dirent.h>
@@ -20,13 +23,11 @@
 # include <unistd.h>
 # include <signal.h>
 # include <sys/errno.h>
-# include "libft.h"
-# include "lexius.h"
 # include "envius.h"
 
 //extern int	g_status;
 
-typedef struct s_fd
+/*typedef struct s_fd
 {
 	int			fd[3];
 	int			st_fd[3];
@@ -35,7 +36,7 @@ typedef struct s_fd
 	char		*err;
 	char		**redir;
 	int			append;
-}t_fd;
+}t_fd;*/
 
 typedef struct s_flst
 {
@@ -44,11 +45,19 @@ typedef struct s_flst
 	struct s_flst	*next;
 }t_flst;
 
+typedef struct s_here
+{
+	char			*limiter;
+	int				pp[2];
+	struct s_here	*next;
+}t_here;
+// heredoc to cmd?
 typedef struct s_cmd
 {
 	char	**cmd;
 	t_flst	*in;
 	t_flst	*out;
+//	t_flst	*err;
 	struct s_cmd	*next;
 }t_cmd;
 
@@ -56,20 +65,23 @@ typedef struct s_data
 {
 	t_env_lst	*env;
 	char		*input;
-	int			here_doc;
-	char		*limiter;
-	int			pp1[4];
+//	int			here_doc;
+	int			here_fd;
+	t_here		*heredoc;
+	int			here_pp[2];
+//	char		*limiter;
+//	int			pp1[4];
 	int			*pp;
 	int			pp_n;
 	t_cmd		*cmd;
 	pid_t		id;
 	int			status;
-	int			append;
+//	int			append;
 	int			fd[3];
 	int			st_fd[3];
-	char		*in;
-	char		*out;
-	char		*err;
+//	char		*in;
+//	char		*out;
+//	char		*err;
 	char		*location;
 }t_data;
 
@@ -103,6 +115,13 @@ t_flst		*ft_flstnew(char *file, int append);
 int			ft_flstsize(t_flst *lst);
 void		ft_flstadd_back(t_flst **lst, t_flst *new);
 void		ft_flstclear(t_flst **lst);
+
+t_here		*ft_herenew(char *limiter);
+int			ft_heresize(t_here *lst);
+void		ft_hereadd_back(t_here **lst, t_here *new);
+void		ft_hereclear(t_here **lst);
+
+int			ft_here_doc(t_data *sh);
 
 int			ft_redir_out(t_flst *out);
 int			ft_redir_in(t_flst *in);

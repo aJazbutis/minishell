@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 16:34:29 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/24 18:55:57 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/29 18:53:32 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,3 +60,27 @@ int	ft_redir_in(t_flst *in)
 	}
 	return (0);
 }
+
+/*int ft_redir_err(t_flst *err) 
+{
+	int	fd;
+
+	while (err)
+	{
+		if (err->append)
+			fd = open(err->file, O_CREAT | O_APPEND | O_WRONLY, 0644);
+		else
+			fd = open(err->file, O_CREAT | O_TRUNC | O_WRONLY, 0644);
+		if (fd < 0)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			perror(err->file);
+			return (fd);
+		}
+		err = err->next;
+		if (!err)
+			return (fd);
+		close(fd);
+	}
+	return (2);
+}*/

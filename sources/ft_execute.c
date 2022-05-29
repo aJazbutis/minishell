@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/20 21:57:46 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/24 23:02:57 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/05/29 23:53:52 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ static void	ft_close_pipes(t_data *sh, int pipe_fail)
 		close(*(sh->pp + 2 * i));
 		close(*(sh->pp + 2 * i + 1));
 	}
-	if (sh->here_doc)
-		close(sh->pp1[0]);
+	if (sh->heredoc)
+		close(sh->here_pp[0]);
 }
 
 /*static void	ft_clean_child(t_data *sh, char *msg)
@@ -48,25 +48,23 @@ static void	ft_dup_dup(t_data *sh, t_cmd *cmd, int i)
 {
 	if (!i)
 	{
-//		if (sh->here_doc)
-//			ft_dup2_dup2(sh->pp1[0], *(sh->pp + 2 * i + 1));
-//		else
-//		{
-//		if (sh->in)
-//		{
-		printf("%p\n",  cmd->in);
+		if (sh->heredoc)
+			ft_dup2_dup2(sh->here_pp[0], *(sh->pp + 2 * i + 1));
+		else
+		{
+//		printf("%p\n",  cmd->in);
 			sh->fd[0] = ft_redir_in(cmd->in);
 			if (sh->fd[0] < 0)
 			{
 				exit(errno);
 			//	ft_clean_child(sh, av[1]);
 			}
-		printf("%d\n",  sh->fd[0]);
+//		printf("%d\n",  sh->fd[0]);
 			ft_dup2_dup2(sh->fd[0], *(sh->pp + 2 * i + 1));
 //		}
 //		else
 //			ft_dup2_dup2(0, *(sh->pp + 2 * i + 1));
-//		}
+		}
 	}
 	if (i == sh->pp_n)
 	{
