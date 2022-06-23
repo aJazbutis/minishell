@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/10 17:35:24 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/24 18:51:37 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/06/20 19:44:51 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static char	**ft_get_path(t_data *sh)
 {
 	char	*path;
-//	char	**pathe;
 	char	**pathes;
 
 	path = ft_getenv(sh, "PATH");
@@ -30,135 +29,78 @@ static char	**ft_get_path(t_data *sh)
 	}
 	return (pathes);
 }
-		
-static char *ft_get_cmd(t_data *sh, char **cmd)
+
+static char	*ft_combine_cmd(t_data *sh, char **path, char *cmd)
 {
-	char	*s;
 	char	*tmp;
-	char	**path;
+	char	*s;
 	int		i;
 
+	i = -1;
+	s = NULL;
+	while (path[++i])
+	{
+		tmp = ft_strjoin(path[i], "/");
+		if (ft_malloc_error(sh, tmp))
+			break ;
+		s = ft_strjoin(tmp, cmd);
+		free(tmp);
+		if (ft_malloc_error(sh, s))
+			break ;
+		if (!access(s, X_OK))
+			break ;
+		free(s);
+		s = NULL;
+	}
+	ft_free_tab(path);
+	return (s);
+}
+
+static char	*ft_get_cmd(t_data *sh, char **cmd)
+{
+	char	*s;
+	char	**path;
+
+	if (cmd[0][0] == '\0')
+		return (NULL);
 	if (!access(cmd[0], X_OK))
 	{
 		s = ft_strdup(cmd[0]);
-		if (!s)
-		{
-			perror("system malfunction");
-			exit(errno);
-		}
+		ft_malloc_error(sh, s);
 		return (s);
 	}
 	path = ft_get_path(sh);
 	if (!path)
 		return (NULL);
-	i = -1;
-	while (path[++i])
-	{
-		 tmp = ft_strjoin(path[i], "/");
-		 if (!tmp)
-		 {
-			perror("system malfunction");
-			ft_free_tab(path);
-			exit(errno);
-		 }
-		 s = ft_strjoin(tmp, cmd[0]);
-		 free(tmp);
-		 if (!s)
-		 {
-			perror("system malfunction");
-			ft_free_tab(path);
-			exit(errno);
-		 }
-		 if (!access(s, X_OK))
-		 {
-			 ft_free_tab(path);
-			 return (s);
-		 }
-		 free(s);
-	}
-	ft_free_tab(path);
-	return (NULL);
+	s = ft_combine_cmd(sh, path, cmd[0]);
+	return (s);
 }
 
 void	ft_exec_cmd(t_data *sh, char **cmd)
 {
 	char	**envp;
-	char	*cmnd;
+	char	*full_cmd;
 
-	cmnd = ft_get_cmd(sh, cmd);
-	if (!cmnd)
+	ft_uncntrl();
+	full_cmd = ft_get_cmd(sh, cmd);
+	if (!full_cmd)
 	{
-		ft_putstr_fd("minishell: ", 2);
+		ft_putstr_fd("\033[1;35m<( ^.^ )>\033[1;0m\033[0m: ", 2);
 		ft_putstr_fd(cmd[0], 2);
 		ft_putstr_fd(": command not found\n", 2);
-//		g_status = 127;
+		ft_clean_sh(sh);
 		exit(127);
 	}
-
-	t_env_lst	*tmp;
-	
-	tmp = ft_get_env_var(sh, "_");
-	if (!tmp->unset)
+	ft_pre_exec_env(sh, full_cmd);
+	envp = env_tab(sh);
+	if (envp)
 	{
-		if (tmp->val)
-			free(tmp->val);
-		tmp->val = ft_strdup(cmnd);
-		if (!tmp->val)
-			perror("system malfunction");
+		ft_pathproofargs(sh, cmd);
+		if (execve(full_cmd, cmd, envp) == -1)
+			ft_mini_perror(sh, "command not executed");
 	}
-
-	envp = env_tab(sh, 0);
-	if (!envp)
-	{
-		perror ("system malfunction");
-		free(cmd);
-//		g_status = errno;
-		exit(errno);
-	}
-
-	ft_pathproofargs(cmd);
-
-	
-	if (execve(cmnd, cmd, envp) == -1)
-	{
-		perror("command not executed");
-//		g_status = errno;
-		free(cmnd);
-		ft_free_tab(envp);
-		exit(errno);
-	}
+	free(full_cmd);
+	ft_free_tab(envp);
+	ft_clean_sh(sh);
+	exit(errno);
 }
-
-//while fork pipess
-/*void	ft_execute_command(t_data *sh, char **cmd)
-{
-	pid_t		id;
-	t_env_lst	*tmp;
-	int			i;
-
-	id = fork();
-	if (id == -1)
-	{
-		perror("fork kaputt");
-//		g_status = errno;
-		return ;
-	}
-	if (id && !sh->pp_nbr)
-	{
-	tmp = ft_get_env_var(sh, "_");
-	if (!tmp->unset)
-	{
-		if (tmp->val)
-			free(tmp->val);
-		i = 0;
-		while (cmd[i + 1])
-			i++;
-		tmp->val = ft_strdup(cmd[i]);
-		if (!tmp->val)
-			perror("system malfunction");
-	}
-	}
-	if (!id)
-		ft_procede(sh, cmd);
-	waitpid(id, &sh->status, 0);
-}*/

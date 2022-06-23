@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   cmd_lst.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: kmorunov <kmorunov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/18 14:47:43 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/24 19:09:16 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/06/19 23:33:44 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,16 +39,18 @@ void	ft_cmdclear(t_cmd **lst)
 		{
 			current = begin_lst;
 			begin_lst = begin_lst->next;
-			ft_free_tab(current->cmd);
+			if (current->cmd)
+				ft_free_tab(current->cmd);
 			ft_flstclear(&current->in);
 			ft_flstclear(&current->out);
+			ft_flstclear(&current->heredoc);
 			free(current);
 		}
 		*lst = NULL;
 	}
 }
 
-t_cmd	*ft_cmdnew(char **cmd, t_flst *in, t_flst *out)
+t_cmd	*ft_cmdnew(char **cmd, t_flst *in, t_flst *out, t_flst *here)
 {
 	t_cmd	*head;
 
@@ -59,6 +61,7 @@ t_cmd	*ft_cmdnew(char **cmd, t_flst *in, t_flst *out)
 		(*head).cmd = cmd;
 		(*head).in = in;
 		(*head).out = out;
+		(*head).heredoc = here;
 		(*head).next = NULL;
 	}
 	return (head);
@@ -75,4 +78,23 @@ int	ft_cmdsize(t_cmd *lst)
 		i++;
 	}
 	return (i);
+}
+
+void	ft_tokclear(t_token **token)
+{
+	t_token	*current;
+	t_token	*begin_lst;
+
+	if (*token)
+	{
+		begin_lst = *token;
+		while (begin_lst)
+		{
+			current = begin_lst;
+			begin_lst = begin_lst->next;
+			free(current->value);
+			free(current);
+		}
+		*token = NULL;
+	}
 }

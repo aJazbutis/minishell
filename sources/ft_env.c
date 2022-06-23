@@ -3,30 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   ft_env.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: kmorunov <kmorunov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/05 20:50:26 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/22 22:23:12 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/06/20 20:53:16 by kmorunov         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	ft_env(t_data *sh)
+static void	ft_printout(t_env_lst *p)
 {
-	t_env_lst	*p;
-
-	p = ft_get_env_var(sh, "_");
-	if (!p->unset)
-	{
-		if (p->val)
-			free(p->val);
-		p->val = ft_strdup(sh->location);
-//		p->val = ft_strdup("somewhere/minishell/ft_env");
-		if (!p->val)
-			perror("system malfunction");
-	}
-	p = sh->env;
 	while (p)
 	{
 		if (!p->unset && !p->not_exp && p->val)
@@ -37,5 +24,29 @@ void	ft_env(t_data *sh)
 			ft_putchar_fd('\n', 1);
 		}
 		p = p->next;
+	}
+}
+
+void	ft_env(t_data *sh)
+{
+	t_env_lst	*p;
+
+	sh->status = 0;
+	p = ft_get_env_var(sh, "_");
+	if (!p->unset)
+	{
+		if (p->val)
+			free(p->val);
+		p->val = ft_strjoin(sh->location, "->ft_env");
+		ft_malloc_error(sh, p->val);
+	}
+	ft_printout(sh->env);
+	p = ft_get_env_var(sh, "_");
+	if (!p->unset)
+	{
+		if (p->val)
+			free(p->val);
+		p->val = ft_strdup("env");
+		ft_malloc_error(sh, p->val);
 	}
 }

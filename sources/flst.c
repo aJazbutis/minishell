@@ -6,7 +6,7 @@
 /*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/24 19:03:10 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/24 19:03:14 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/06/19 23:34:36 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,8 @@ void	ft_flstclear(t_flst **lst)
 		{
 			current = begin_lst;
 			begin_lst = begin_lst->next;
-			free(current->file);
+			if (current->str)
+				free(current->str);
 			free(current);
 		}
 		*lst = NULL;
@@ -54,8 +55,8 @@ t_flst	*ft_flstnew(char *file, int append)
 	head = (t_flst *)malloc(sizeof(t_flst));
 	if (head)
 	{
-		(*head).file = file;
-		(*head).append = append;
+		(*head).str = file;
+		(*head).nbr[0] = append;
 		(*head).next = NULL;
 	}
 	return (head);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env_var.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ajazbuti <ajazbuti@student.42heilbronn.de  +#+  +:+       +#+        */
+/*   By: kmorunov <kmorunov@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/05/03 20:15:49 by ajazbuti          #+#    #+#             */
-/*   Updated: 2022/05/21 21:21:25 by ajazbuti         ###   ########.fr       */
+/*   Updated: 2022/06/21 16:09:51 by ajazbuti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,82 +21,32 @@ char	*ft_getenv(t_data *sh, char *s)
 	current = sh->env;
 	while (current)
 	{
-		if (!ft_strncmp(s, current->var, ft_strlen(current->var)) && !current->unset)
+		if (!ft_strncmp(s, current->var, ft_strlen(current->var) + 1)
+			&& !current->unset)
 		{
-			ret = ft_strdup(current->val);
-			if (!ret)
-				perror("system malfunction");
-			return (ret);
+			if (current->val)
+			{
+				ret = ft_strdup(current->val);
+				if (!ret)
+					perror("system malfunction");
+				return (ret);
+			}
 		}
 		current = current->next;
 	}
 	return (NULL);
 }
 
-t_env_lst *ft_get_env_var(t_data *sh, char *s)
+t_env_lst	*ft_get_env_var(t_data *sh, char *s)
 {
 	t_env_lst	*current;
 
 	current = sh->env;
 	while (current)
 	{
-		if (!ft_strncmp(s, current->var, ft_strlen(current->var)))
+		if (!ft_strncmp(s, current->var, ft_strlen(current->var) + 1))
 			return (current);
 		current = current->next;
 	}
 	return (NULL);
-}
-
-static void	ft_unset_node(t_env_lst *node)
-{
-//	if (!node)
-//		return ;
-//	if (node->var)
-//		free(node->var);
-//	node->var = NULL;
-	if (node->val)
-		free(node->val);
-	node->val = NULL;
-	node->unset = 1;
-	node->not_exp = 1;
-//	free(node);
-//	node = NULL;
-}
-
-void	ft_unset(t_data *sh, char **cmd)
-{
-//	t_env_lst	*current;
-	t_env_lst	*tmp;
-	int			i;
-
-	i = 0;
-//	ft_underscore(sh);
-	while (cmd[++i])
-	{
-		tmp = ft_get_env_var(sh, cmd[i]);
-		if (tmp)
-			ft_unset_node(tmp);
-	}
-/*	current = sh->env;
-	if (!ft_strncmp(sh->cmd[1], sh->env->var, ft_strlen(sh->cmd[1])))
-	{
-		tmp = sh->env;
-//		sh->env = sh->env->next;
-		ft_unset_node(tmp);
-	}
-	else
-	{
-		while (current->next)
-		{
-			if (!ft_strncmp(sh->cmd[1], current->next->var, ft_strlen(sh->cmd[1])))
-			{
-				tmp = current->next;
-//				current->next = current->next->next;
-				ft_unset_node(tmp);
-//				continue ;
-			}
-			current = current->next;
-		}
-	}
-	g_status = 0;*/
 }
